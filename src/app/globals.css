@@ -1,0 +1,875 @@
+/* ============================================================
+   Global Styles — Đấu Trường Lịch Sử Design System
+   Theme: Vietnamese Historical + Modern UX
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+@import "tailwindcss";
+
+/* ============================================================
+   Design Tokens
+   ============================================================ */
+:root {
+  /* Colors — Historical palette */
+  --gold: #C4972F;
+  --gold-light: #E8D5A3;
+  --gold-dark: #8B6914;
+  --gold-glow: rgba(196, 151, 47, 0.3);
+
+  --crimson: #8B1A1A;
+  --crimson-light: #B22222;
+  --crimson-glow: rgba(139, 26, 26, 0.2);
+
+  --parchment: #F5E6C8;
+  --parchment-dark: #E8D4AA;
+  --parchment-deeper: #D4BC8A;
+
+  --ink: #2C1810;
+  --ink-light: #5C4033;
+  --ink-muted: #8B7355;
+
+  --jade: #1B5E20;
+  --jade-light: #2E7D32;
+
+  --navy: #1A237E;
+
+  --white: #FFF8F0;
+  --white-pure: #FFFFFF;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(44, 24, 16, 0.1);
+  --shadow-md: 0 4px 12px rgba(44, 24, 16, 0.15);
+  --shadow-lg: 0 8px 24px rgba(44, 24, 16, 0.2);
+  --shadow-glow-gold: 0 0 20px rgba(196, 151, 47, 0.3);
+  --shadow-glow-crimson: 0 0 20px rgba(139, 26, 26, 0.2);
+
+  /* Typography */
+  --font-heading: 'Playfair Display', 'Noto Serif', Georgia, serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-accent: 'Noto Serif', Georgia, serif;
+
+  /* Spacing */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 400ms ease;
+}
+
+/* ============================================================
+   Base Styles
+   ============================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background-color: var(--parchment);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   Parchment Background Texture (CSS-only)
+   ============================================================ */
+.bg-parchment {
+  background-color: var(--parchment);
+  background-image:
+    /* Paper grain */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23F5E6C8'/%3E%3Crect width='1' height='1' fill='%23EDD9B5' opacity='0.3'/%3E%3C/svg%3E"),
+    /* Subtle gradient for depth */
+    radial-gradient(ellipse at 30% 20%, rgba(232, 213, 163, 0.5) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(212, 188, 138, 0.3) 0%, transparent 60%);
+}
+
+/* ============================================================
+   Historical Decorative Patterns
+   ============================================================ */
+
+/* Dong Son drum pattern border (SVG-based) */
+.border-historical {
+  border: 2px solid var(--gold);
+  border-image: repeating-linear-gradient(
+    90deg,
+    var(--gold) 0px,
+    var(--gold) 8px,
+    transparent 8px,
+    transparent 12px,
+    var(--gold-dark) 12px,
+    var(--gold-dark) 14px,
+    transparent 14px,
+    transparent 18px
+  ) 2;
+}
+
+/* Red seal / stamp effect */
+.seal-stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--crimson);
+  border-radius: 4px;
+  padding: 4px 12px;
+  color: var(--crimson);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  transform: rotate(-3deg);
+  box-shadow: inset 0 0 0 1px var(--crimson-light);
+  opacity: 0.9;
+}
+
+/* Scroll/cuộn giấy effect for cards */
+.scroll-card {
+  background:
+    linear-gradient(180deg, var(--parchment-dark) 0%, var(--parchment) 3%, var(--parchment) 97%, var(--parchment-dark) 100%);
+  border-left: 4px solid var(--gold);
+  border-right: 4px solid var(--gold);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+.scroll-card::before,
+.scroll-card::after {
+  content: '';
+  display: block;
+  height: 8px;
+  background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold) 20%, var(--gold-light) 50%, var(--gold) 80%, var(--gold-dark) 100%);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.scroll-card::after {
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+}
+
+/* ============================================================
+   Typography Classes
+   ============================================================ */
+.text-heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.text-heading-gold {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--gold-dark);
+  line-height: 1.2;
+}
+
+.text-accent {
+  font-family: var(--font-accent);
+  font-style: italic;
+  color: var(--ink-light);
+}
+
+/* ============================================================
+   Button Styles
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-light) 100%);
+  color: var(--white);
+  box-shadow: var(--shadow-md), var(--shadow-glow-crimson);
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow: var(--shadow-lg), 0 0 30px rgba(139, 26, 26, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+  color: var(--white);
+  box-shadow: var(--shadow-md), var(--shadow-glow-gold);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  box-shadow: var(--shadow-lg), 0 0 30px rgba(196, 151, 47, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--ink);
+  border: 2px solid var(--gold);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: var(--gold-light);
+  border-color: var(--gold-dark);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-light);
+  padding: 8px 16px;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: rgba(196, 151, 47, 0.1);
+  color: var(--ink);
+}
+
+.btn-large {
+  padding: 18px 36px;
+  font-size: 1.15rem;
+  border-radius: var(--radius-lg);
+}
+
+/* ============================================================
+   Card Styles
+   ============================================================ */
+.card {
+  background: var(--parchment);
+  border: 1px solid var(--gold-light);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+}
+
+.card-elevated {
+  background: var(--white);
+  border: 1px solid var(--gold-light);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+}
+
+.card-gold {
+  background: linear-gradient(135deg, rgba(232, 213, 163, 0.5) 0%, rgba(196, 151, 47, 0.1) 100%);
+  border: 2px solid var(--gold);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-md), var(--shadow-glow-gold);
+}
+
+/* ============================================================
+   Answer Option Styles
+   ============================================================ */
+.answer-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--white);
+  border: 2px solid var(--gold-light);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  font-size: 1rem;
+  text-align: left;
+  width: 100%;
+}
+
+.answer-option:hover:not(.answer-disabled) {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, rgba(232, 213, 163, 0.3) 0%, var(--white) 100%);
+  transform: translateX(4px);
+  box-shadow: var(--shadow-sm);
+}
+
+.answer-option.answer-selected {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, rgba(196, 151, 47, 0.15) 0%, rgba(232, 213, 163, 0.2) 100%);
+  box-shadow: var(--shadow-glow-gold);
+}
+
+.answer-option.answer-correct {
+  border-color: var(--jade);
+  background: linear-gradient(135deg, rgba(27, 94, 32, 0.1) 0%, rgba(46, 125, 50, 0.05) 100%);
+  box-shadow: 0 0 15px rgba(27, 94, 32, 0.2);
+}
+
+.answer-option.answer-wrong {
+  border-color: var(--crimson);
+  background: linear-gradient(135deg, rgba(139, 26, 26, 0.1) 0%, rgba(178, 34, 34, 0.05) 100%);
+  opacity: 0.8;
+}
+
+.answer-option.answer-disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.answer-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--gold-light);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.answer-correct .answer-label {
+  background: var(--jade);
+  color: var(--white-pure);
+}
+
+.answer-wrong .answer-label {
+  background: var(--crimson);
+  color: var(--white-pure);
+}
+
+/* ============================================================
+   Timer Styles
+   ============================================================ */
+.timer-circle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+}
+
+.timer-circle svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg);
+}
+
+.timer-number {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ink);
+  z-index: 1;
+}
+
+.timer-urgent .timer-number {
+  color: var(--crimson);
+  animation: pulse-urgent 0.5s ease-in-out infinite;
+}
+
+@keyframes pulse-urgent {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* ============================================================
+   Progress Bar
+   ============================================================ */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--parchment-dark);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-dark) 100%);
+  border-radius: 4px;
+  transition: width var(--transition-normal);
+}
+
+.progress-bar-fill.progress-urgent {
+  background: linear-gradient(90deg, var(--crimson) 0%, var(--crimson-light) 100%);
+}
+
+/* ============================================================
+   Leaderboard Styles
+   ============================================================ */
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-normal);
+  border: 1px solid transparent;
+}
+
+.leaderboard-item-1 {
+  background: linear-gradient(135deg, rgba(196, 151, 47, 0.2) 0%, rgba(232, 213, 163, 0.3) 100%);
+  border-color: var(--gold);
+}
+
+.leaderboard-item-2 {
+  background: linear-gradient(135deg, rgba(192, 192, 192, 0.15) 0%, rgba(220, 220, 220, 0.1) 100%);
+  border-color: #C0C0C0;
+}
+
+.leaderboard-item-3 {
+  background: linear-gradient(135deg, rgba(205, 127, 50, 0.15) 0%, rgba(205, 127, 50, 0.05) 100%);
+  border-color: #CD7F32;
+}
+
+.leaderboard-rank-up {
+  animation: rank-up 0.5s ease;
+}
+
+.leaderboard-rank-down {
+  animation: rank-down 0.5s ease;
+}
+
+@keyframes rank-up {
+  0% { transform: translateY(10px); opacity: 0.5; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes rank-down {
+  0% { transform: translateY(-10px); opacity: 0.5; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* ============================================================
+   Badge / Status
+   ============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-online {
+  background: rgba(27, 94, 32, 0.1);
+  color: var(--jade);
+}
+
+.badge-offline {
+  background: rgba(139, 26, 26, 0.1);
+  color: var(--crimson);
+}
+
+.badge-gold {
+  background: rgba(196, 151, 47, 0.15);
+  color: var(--gold-dark);
+}
+
+/* Status dot */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot-online {
+  background: var(--jade);
+  box-shadow: 0 0 6px rgba(27, 94, 32, 0.5);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.status-dot-offline {
+  background: var(--crimson);
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============================================================
+   Toast / Notification
+   ============================================================ */
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: 0.9rem;
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-lg);
+  max-width: 90vw;
+  text-align: center;
+}
+
+.toast.toast-visible {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.toast-success {
+  background: var(--jade);
+  color: var(--white-pure);
+}
+
+.toast-error {
+  background: var(--crimson);
+  color: var(--white-pure);
+}
+
+.toast-info {
+  background: var(--ink);
+  color: var(--white);
+}
+
+/* ============================================================
+   Loading Spinner
+   ============================================================ */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--gold-light);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   Page Transitions & Animations
+   ============================================================ */
+.fade-in {
+  animation: fadeIn 0.5s ease;
+}
+
+.slide-up {
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scale-in {
+  animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Staggered animation for lists */
+.stagger-item {
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ============================================================
+   Confetti Canvas
+   ============================================================ */
+.confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* ============================================================
+   Responsive Utilities
+   ============================================================ */
+.container-game {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.container-admin {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Mobile-first: larger tap targets */
+@media (max-width: 640px) {
+  .btn {
+    padding: 16px 24px;
+    font-size: 1rem;
+    width: 100%;
+  }
+
+  .btn-large {
+    padding: 18px 28px;
+    font-size: 1.1rem;
+  }
+
+  .answer-option {
+    padding: 14px 16px;
+  }
+
+  .container-game {
+    padding: 12px;
+  }
+}
+
+/* ============================================================
+   Historical Background SVG Pattern (Dong Son inspired)
+   ============================================================ */
+.bg-historical-pattern {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23C4972F'%3E%3Ccircle cx='40' cy='40' r='35' fill='none' stroke='%23C4972F' stroke-width='1'/%3E%3Ccircle cx='40' cy='40' r='25' fill='none' stroke='%23C4972F' stroke-width='0.5'/%3E%3Ccircle cx='40' cy='40' r='15' fill='none' stroke='%23C4972F' stroke-width='0.5'/%3E%3Ccircle cx='40' cy='40' r='5' fill='%23C4972F' opacity='0.3'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 120px 120px;
+}
+
+/* ============================================================
+   Connection Status Bar
+   ============================================================ */
+.connection-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 16px;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 500;
+  z-index: 100;
+  transition: all var(--transition-normal);
+}
+
+.connection-bar-disconnected {
+  background: var(--crimson);
+  color: var(--white-pure);
+}
+
+/* ============================================================
+   Sound Toggle
+   ============================================================ */
+.sound-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 50;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--parchment);
+  border: 2px solid var(--gold-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  font-size: 1.2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.sound-toggle:hover {
+  border-color: var(--gold);
+  box-shadow: var(--shadow-md);
+}
+
+/* ============================================================
+   Leader Highlight
+   ============================================================ */
+.leader-highlight {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(196, 151, 47, 0.15) 0%, rgba(232, 213, 163, 0.2) 100%);
+  border: 2px solid var(--gold);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-glow-gold);
+  position: relative;
+  overflow: hidden;
+}
+
+.leader-highlight::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, transparent 0%, rgba(196, 151, 47, 0.1) 25%, transparent 50%);
+  animation: leader-glow 4s linear infinite;
+}
+
+@keyframes leader-glow {
+  to { transform: rotate(360deg); }
+}
+
+.leader-change-animation {
+  animation: leader-change 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes leader-change {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ============================================================
+   Did You Know box
+   ============================================================ */
+.did-you-know {
+  background: linear-gradient(135deg, rgba(232, 213, 163, 0.5) 0%, var(--parchment) 100%);
+  border-left: 4px solid var(--gold);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 16px 20px;
+  margin-top: 16px;
+}
+
+/* ============================================================
+   Victory Screen
+   ============================================================ */
+.victory-crown {
+  font-size: 4rem;
+  animation: crown-bounce 1s ease-in-out infinite;
+}
+
+@keyframes crown-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.victory-score {
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.victory-medal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  font-size: 2.5rem;
+  box-shadow: var(--shadow-lg);
+  animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.medal-gold { background: linear-gradient(135deg, #FFD700 0%, #C4972F 100%); }
+.medal-silver { background: linear-gradient(135deg, #E8E8E8 0%, #C0C0C0 100%); }
+.medal-bronze { background: linear-gradient(135deg, #E8A952 0%, #CD7F32 100%); }
+
+/* ============================================================
+   QR Code container
+   ============================================================ */
+.qr-container {
+  background: var(--white-pure);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  display: inline-block;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============================================================
+   Admin table
+   ============================================================ */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-muted);
+  border-bottom: 2px solid var(--gold-light);
+}
+
+.admin-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(196, 151, 47, 0.15);
+  font-size: 0.9rem;
+}
+
+.admin-table tr:hover {
+  background: rgba(196, 151, 47, 0.05);
+}
+
+/* ============================================================
+   Scrollbar
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--parchment-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gold-light);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}

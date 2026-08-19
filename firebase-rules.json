@@ -1,0 +1,59 @@
+{
+  "rules": {
+    "rooms": {
+      "$roomCode": {
+        ".read": true,
+
+        "hostId": {
+          ".write": "!data.exists() && auth != null"
+        },
+        "hostName": {
+          ".write": "!data.exists() && auth != null"
+        },
+        "roomName": {
+          ".write": "!data.exists() && auth != null"
+        },
+        "createdAt": {
+          ".write": "!data.exists() && auth != null"
+        },
+
+        "status": {
+          ".write": "auth != null && auth.uid === data.parent().child('hostId').val()"
+        },
+        "currentQuestion": {
+          ".write": "auth != null && auth.uid === data.parent().child('hostId').val()"
+        },
+        "questionStartedAt": {
+          ".write": "auth != null && auth.uid === data.parent().child('hostId').val()"
+        },
+        "playerCount": {
+          ".write": "auth != null"
+        },
+
+        "players": {
+          "$playerId": {
+            ".write": "auth != null && auth.uid === $playerId",
+            ".validate": "newData.hasChildren(['name', 'score', 'isOnline'])",
+
+            "score": {
+              ".write": "auth != null && auth.uid === $playerId"
+            },
+            "name": {
+              ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 20"
+            }
+          }
+        },
+
+        "answers": {
+          "$playerId": {
+            "$questionIndex": {
+              ".write": "auth != null && auth.uid === $playerId && !data.exists()",
+              ".read": "auth != null && (auth.uid === $playerId || auth.uid === data.parent().parent().parent().child('hostId').val())",
+              ".validate": "newData.hasChildren(['answer', 'answeredAt', 'scoreAwarded'])"
+            }
+          }
+        }
+      }
+    }
+  }
+}
