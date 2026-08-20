@@ -107,9 +107,9 @@ function JoinRoomForm() {
               style={{
                 display: 'block',
                 marginBottom: 6,
-                fontWeight: 600,
-                fontSize: '0.9rem',
-                color: 'var(--ink-light)',
+                fontWeight: 700,
+                fontSize: '0.95rem',
+                color: 'var(--ink)',
               }}
             >
               Mã phòng
@@ -124,22 +124,28 @@ function JoinRoomForm() {
               style={{
                 width: '100%',
                 padding: '14px 16px',
-                border: '2px solid var(--gold-light)',
+                border: '2px solid rgba(196, 151, 47, 0.5)',
                 borderRadius: 'var(--radius-md)',
                 fontSize: '1.5rem',
                 fontFamily: 'var(--font-heading)',
-                fontWeight: 700,
+                fontWeight: 800,
                 textAlign: 'center',
                 letterSpacing: '0.1em',
-                background: 'var(--white)',
+                color: 'var(--ink)',
+                background: '#FFFFFF',
                 outline: 'none',
                 textTransform: 'uppercase',
-                transition: 'border-color var(--transition-normal)',
+                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
+                transition: 'border-color var(--transition-normal), box-shadow var(--transition-normal)',
               }}
-              onFocus={(e) => (e.target.style.borderColor = 'var(--gold)')}
-              onBlur={(e) =>
-                (e.target.style.borderColor = 'var(--gold-light)')
-              }
+              onFocus={(e) => {
+                e.target.style.borderColor = 'var(--gold)';
+                e.target.style.boxShadow = '0 0 0 3px rgba(196, 151, 47, 0.25)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = 'rgba(196, 151, 47, 0.5)';
+                e.target.style.boxShadow = 'inset 0 2px 4px rgba(0,0,0,0.05)';
+              }}
             />
           </div>
 
@@ -150,9 +156,9 @@ function JoinRoomForm() {
               style={{
                 display: 'block',
                 marginBottom: 6,
-                fontWeight: 600,
-                fontSize: '0.9rem',
-                color: 'var(--ink-light)',
+                fontWeight: 700,
+                fontSize: '0.95rem',
+                color: 'var(--ink)',
               }}
             >
               Nickname
@@ -167,18 +173,25 @@ function JoinRoomForm() {
               style={{
                 width: '100%',
                 padding: '14px 16px',
-                border: '2px solid var(--gold-light)',
+                border: '2px solid rgba(196, 151, 47, 0.5)',
                 borderRadius: 'var(--radius-md)',
-                fontSize: '1rem',
+                fontSize: '16px',
                 fontFamily: 'var(--font-body)',
-                background: 'var(--white)',
+                fontWeight: 600,
+                color: 'var(--ink)',
+                background: '#FFFFFF',
                 outline: 'none',
-                transition: 'border-color var(--transition-normal)',
+                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
+                transition: 'border-color var(--transition-normal), box-shadow var(--transition-normal)',
               }}
-              onFocus={(e) => (e.target.style.borderColor = 'var(--gold)')}
-              onBlur={(e) =>
-                (e.target.style.borderColor = 'var(--gold-light)')
-              }
+              onFocus={(e) => {
+                e.target.style.borderColor = 'var(--gold)';
+                e.target.style.boxShadow = '0 0 0 3px rgba(196, 151, 47, 0.25)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = 'rgba(196, 151, 47, 0.5)';
+                e.target.style.boxShadow = 'inset 0 2px 4px rgba(0,0,0,0.05)';
+              }}
             />
           </div>
 

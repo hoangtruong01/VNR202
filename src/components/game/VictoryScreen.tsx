@@ -57,30 +57,32 @@ export default function VictoryScreen({
   return (
     <div className="container-game fade-in" style={{ textAlign: 'center', paddingTop: 32 }}>
       {/* Title */}
-      <h1 className="text-heading" style={{ fontSize: '1.6rem', marginBottom: 24 }}>
+      <h1 className="text-heading" style={{ fontSize: 'clamp(1.4rem, 5vw, 1.8rem)', marginBottom: 20, color: 'var(--ink)', fontWeight: 800 }}>
         🏆 KẾT QUẢ CHUNG CUỘC
       </h1>
 
       {/* Winner */}
       {top3.length > 0 && (
-        <div style={{ marginBottom: 32 }}>
+        <div style={{ marginBottom: 28 }}>
           {/* Crown animation for #1 */}
-          <div className="victory-crown">👑</div>
+          <div className="victory-crown" style={{ fontSize: 'clamp(2.5rem, 8vw, 3.5rem)' }}>👑</div>
 
           <h2
             className="text-heading"
             style={{
-              fontSize: '1.8rem',
+              fontSize: 'clamp(1.5rem, 6vw, 2rem)',
               marginTop: 8,
               marginBottom: 4,
+              color: 'var(--ink)',
+              fontWeight: 800,
             }}
           >
             {top3[0].name}
           </h2>
 
-          <div className="victory-score">{formatScore(top3[0].score)}</div>
-          <p style={{ color: 'var(--gold-dark)', fontWeight: 600, marginTop: 4 }}>
-            ĐIỂM
+          <div className="victory-score" style={{ fontSize: 'clamp(2.2rem, 8vw, 3.2rem)' }}>{formatScore(top3[0].score)}</div>
+          <p style={{ color: 'var(--gold-dark)', fontWeight: 800, marginTop: 4, fontSize: '0.9rem', letterSpacing: '0.05em' }}>
+            ĐIỂM SỐ
           </p>
         </div>
       )}
@@ -90,8 +92,8 @@ export default function VictoryScreen({
         style={{
           display: 'flex',
           justifyContent: 'center',
-          gap: 20,
-          marginBottom: 32,
+          gap: 12,
+          marginBottom: 28,
           flexWrap: 'wrap',
         }}
       >
@@ -104,8 +106,11 @@ export default function VictoryScreen({
               style={{
                 animationDelay: `${(index + 1) * 300}ms`,
                 textAlign: 'center',
-                padding: 16,
-                minWidth: 120,
+                padding: '12px 14px',
+                minWidth: 95,
+                background: 'rgba(255, 255, 255, 0.7)',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid rgba(196, 151, 47, 0.3)',
               }}
             >
               <div
@@ -116,9 +121,10 @@ export default function VictoryScreen({
               </div>
               <h3
                 style={{
-                  marginTop: 10,
-                  fontSize: '1rem',
-                  fontWeight: isCurrentPlayer ? 800 : 600,
+                  marginTop: 8,
+                  fontSize: '0.95rem',
+                  fontWeight: isCurrentPlayer ? 800 : 700,
+                  color: 'var(--ink)',
                 }}
               >
                 {player.name}
@@ -127,8 +133,8 @@ export default function VictoryScreen({
               <p
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontSize: '1.1rem',
-                  fontWeight: 700,
+                  fontSize: '1.05rem',
+                  fontWeight: 800,
                   color: 'var(--gold-dark)',
                 }}
               >

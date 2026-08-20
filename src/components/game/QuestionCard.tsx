@@ -63,16 +63,18 @@ export default function QuestionCard({
       <div
         className="card-elevated"
         style={{
-          marginBottom: 20,
+          marginBottom: 16,
           textAlign: 'center',
-          padding: '24px 20px',
+          padding: '22px 18px',
         }}
       >
         <h2
           className="text-heading"
           style={{
-            fontSize: 'clamp(1.1rem, 4vw, 1.35rem)',
+            fontSize: 'clamp(1.15rem, 4.5vw, 1.4rem)',
             lineHeight: 1.5,
+            color: 'var(--ink)',
+            fontWeight: 800,
           }}
         >
           {question.question}
@@ -104,14 +106,17 @@ export default function QuestionCard({
           style={{
             textAlign: 'center',
             marginTop: 16,
-            padding: 12,
-            background: 'rgba(196, 151, 47, 0.1)',
+            padding: '12px 16px',
+            background: 'linear-gradient(135deg, #FFF9E6 0%, #FFFDF7 100%)',
+            border: '1.5px solid var(--gold)',
             borderRadius: 'var(--radius-md)',
-            fontWeight: 500,
-            color: 'var(--gold-dark)',
+            fontWeight: 700,
+            fontSize: '0.95rem',
+            color: 'var(--ink)',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
           }}
         >
-          ✓ Đã ghi nhận câu trả lời
+          ✓ Đã ghi nhận câu trả lời! Đang chờ hết giờ...
         </div>
       )}
     </div>

@@ -221,44 +221,44 @@ export default function AdminDashboardPage() {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
           gap: 10,
           marginBottom: 20,
         }}
       >
-        <div className="card" style={{ padding: '12px 16px', textAlign: 'center' }}>
-          <p style={{ fontSize: '0.75rem', color: 'var(--ink-muted)', marginBottom: 4 }}>
+        <div className="card" style={{ padding: '12px 14px', textAlign: 'center' }}>
+          <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--ink-muted)', marginBottom: 4, letterSpacing: '0.05em' }}>
             TRẠNG THÁI
           </p>
-          <p style={{ fontWeight: 700, fontSize: '0.85rem' }}>
+          <p style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--ink)' }}>
             {statusLabels[room.status]}
           </p>
         </div>
-        <div className="card" style={{ padding: '12px 16px', textAlign: 'center' }}>
-          <p style={{ fontSize: '0.75rem', color: 'var(--ink-muted)', marginBottom: 4 }}>
+        <div className="card" style={{ padding: '12px 14px', textAlign: 'center' }}>
+          <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--ink-muted)', marginBottom: 4, letterSpacing: '0.05em' }}>
             NGƯỜI CHƠI
           </p>
-          <p style={{ fontWeight: 700, fontSize: '1.2rem' }}>{playerCount}</p>
+          <p style={{ fontWeight: 800, fontSize: '1.25rem', color: 'var(--ink)' }}>{playerCount}</p>
         </div>
-        <div className="card" style={{ padding: '12px 16px', textAlign: 'center' }}>
-          <p style={{ fontSize: '0.75rem', color: 'var(--ink-muted)', marginBottom: 4 }}>
+        <div className="card" style={{ padding: '12px 14px', textAlign: 'center' }}>
+          <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--ink-muted)', marginBottom: 4, letterSpacing: '0.05em' }}>
             CÂU HỎI
           </p>
-          <p style={{ fontWeight: 700, fontSize: '1.2rem' }}>
+          <p style={{ fontWeight: 800, fontSize: '1.25rem', color: 'var(--ink)' }}>
             {room.status === 'waiting'
               ? '—'
               : `${room.currentQuestion + 1} / ${SCORING.TOTAL_QUESTIONS}`}
           </p>
         </div>
-        <div className="card" style={{ padding: '12px 16px', textAlign: 'center' }}>
-          <p style={{ fontSize: '0.75rem', color: 'var(--ink-muted)', marginBottom: 4 }}>
+        <div className="card" style={{ padding: '12px 14px', textAlign: 'center' }}>
+          <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--ink-muted)', marginBottom: 4, letterSpacing: '0.05em' }}>
             THỜI GIAN
           </p>
           <p
             style={{
-              fontWeight: 700,
-              fontSize: '1.2rem',
-              color: isUrgent ? 'var(--crimson)' : 'inherit',
+              fontWeight: 800,
+              fontSize: '1.25rem',
+              color: isUrgent ? 'var(--crimson)' : 'var(--ink)',
             }}
           >
             {room.status === 'playing' ? `${timeLeft}s` : '—'}

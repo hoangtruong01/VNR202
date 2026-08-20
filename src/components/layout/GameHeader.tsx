@@ -9,10 +9,10 @@ interface GameHeaderProps {
 
 export default function GameHeader({ roomCode, subtitle }: GameHeaderProps) {
   return (
-    <header style={{ textAlign: 'center', paddingTop: 16, paddingBottom: 12 }}>
+    <header style={{ textAlign: 'center', paddingTop: 12, paddingBottom: 12 }}>
       <h1
         className="text-heading-gold"
-        style={{ fontSize: 'clamp(1.2rem, 5vw, 1.5rem)' }}
+        style={{ fontSize: 'clamp(1.3rem, 5vw, 1.6rem)' }}
       >
         🏯 ĐẤU TRƯỜNG LỊCH SỬ
       </h1>
@@ -22,7 +22,7 @@ export default function GameHeader({ roomCode, subtitle }: GameHeaderProps) {
         </div>
       )}
       {subtitle && (
-        <p style={{ marginTop: 6, color: 'var(--ink-muted)', fontSize: '0.85rem' }}>
+        <p style={{ marginTop: 6, color: '#120905', fontSize: '0.9rem', fontWeight: 700, textShadow: '0 1px 4px rgba(255,255,255,0.9)' }}>
           {subtitle}
         </p>
       )}

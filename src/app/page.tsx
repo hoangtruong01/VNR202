@@ -24,9 +24,9 @@ export default function HomePage() {
       {/* Decorative top element */}
       <div
         style={{
-          fontSize: '3.5rem',
-          marginBottom: 8,
-          filter: 'drop-shadow(0 4px 8px rgba(196, 151, 47, 0.3))',
+          fontSize: 'clamp(3rem, 10vw, 4rem)',
+          marginBottom: 12,
+          filter: 'drop-shadow(0 6px 12px rgba(196, 151, 47, 0.4))',
         }}
       >
         🏯
@@ -36,9 +36,9 @@ export default function HomePage() {
       <h1
         className="text-heading-gold"
         style={{
-          fontSize: 'clamp(1.8rem, 7vw, 2.5rem)',
-          marginBottom: 8,
-          letterSpacing: '0.02em',
+          fontSize: 'clamp(1.8rem, 8vw, 2.6rem)',
+          marginBottom: 10,
+          letterSpacing: '0.03em',
         }}
       >
         ĐẤU TRƯỜNG LỊCH SỬ
@@ -48,9 +48,10 @@ export default function HomePage() {
       <p
         className="text-accent"
         style={{
-          fontSize: 'clamp(1rem, 3.5vw, 1.15rem)',
-          marginBottom: 40,
-          maxWidth: 360,
+          fontSize: 'clamp(1.05rem, 4vw, 1.2rem)',
+          marginBottom: 36,
+          maxWidth: 380,
+          lineHeight: 1.5,
         }}
       >
         &ldquo;Bạn hiểu lịch sử Việt Nam đến đâu?&rdquo;
@@ -63,15 +64,15 @@ export default function HomePage() {
           flexDirection: 'column',
           gap: 14,
           width: '100%',
-          maxWidth: 320,
-          marginBottom: 40,
+          maxWidth: 340,
+          marginBottom: 36,
         }}
       >
         <button
           className="btn btn-primary btn-large"
           onClick={() => router.push('/create')}
           id="btn-create-room"
-          style={{ fontSize: '1.1rem' }}
+          style={{ fontSize: '1.1rem', width: '100%' }}
         >
           🎯 TẠO PHÒNG
         </button>
@@ -80,7 +81,7 @@ export default function HomePage() {
           className="btn btn-secondary btn-large"
           onClick={() => router.push('/join')}
           id="btn-join-room"
-          style={{ fontSize: '1.1rem' }}
+          style={{ fontSize: '1.1rem', width: '100%' }}
         >
           🚪 THAM GIA PHÒNG
         </button>
@@ -90,15 +91,15 @@ export default function HomePage() {
       <div
         style={{
           display: 'flex',
-          gap: 12,
+          gap: 10,
           flexWrap: 'wrap',
           justifyContent: 'center',
           marginBottom: 32,
         }}
       >
-        <span className="badge badge-gold">📝 15 câu hỏi</span>
-        <span className="badge badge-gold">⚡ Realtime</span>
-        <span className="badge badge-gold">👥 Multiplayer</span>
+        <span className="badge badge-gold" style={{ fontSize: '0.82rem', padding: '6px 14px' }}>📝 15 câu hỏi</span>
+        <span className="badge badge-gold" style={{ fontSize: '0.82rem', padding: '6px 14px' }}>⚡ Realtime</span>
+        <span className="badge badge-gold" style={{ fontSize: '0.82rem', padding: '6px 14px' }}>👥 Multiplayer</span>
       </div>
 
       {/* Decorative divider */}
