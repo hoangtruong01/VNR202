@@ -106,8 +106,9 @@ export default function HomePage() {
         style={{
           width: 120,
           height: 2,
-          background: 'linear-gradient(90deg, transparent, var(--gold), transparent)',
+          background: 'linear-gradient(90deg, transparent, #FFD700, transparent)',
           marginBottom: 20,
+          boxShadow: '0 0 8px rgba(255, 215, 0, 0.4)',
         }}
       />
 

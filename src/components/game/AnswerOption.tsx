@@ -1,5 +1,5 @@
 // ============================================================
-// AnswerOption — Individual answer button with states
+// AnswerOption — Individual answer button with reveal drama
 // ============================================================
 'use client';
 
@@ -28,8 +28,20 @@ export default function AnswerOption({
 
   if (disabled) className += ' answer-disabled';
   if (selected && !isRevealed) className += ' answer-selected';
-  if (isRevealed && isCorrect) className += ' answer-correct';
-  if (isRevealed && selected && !isCorrect) className += ' answer-wrong';
+
+  // Reveal drama animations
+  if (isRevealed) {
+    if (isCorrect) {
+      className += ' answer-correct answer-reveal-correct';
+    } else if (selected && !isCorrect) {
+      className += ' answer-wrong answer-reveal-selected-wrong';
+    } else {
+      className += ' answer-reveal-wrong';
+    }
+  }
+
+  // Stagger reveal delay for drama
+  const revealDelay = isRevealed ? `${index * 100 + 50}ms` : '0ms';
 
   return (
     <button
@@ -38,17 +50,18 @@ export default function AnswerOption({
       disabled={disabled}
       id={`answer-${index}`}
       style={{
-        animationDelay: `${index * 80}ms`,
+        animationDelay: isRevealed ? revealDelay : `${index * 80}ms`,
       }}
     >
       <span className="answer-label">{LABELS[index]}</span>
       <span style={{ flex: 1, lineHeight: 1.4 }}>{text}</span>
       {isRevealed && isCorrect && (
-        <span style={{ fontSize: '1.2rem' }}>✓</span>
+        <span style={{ fontSize: '1.2rem', animation: 'celebration-pop 0.4s ease both', animationDelay: '0.3s' }}>✅</span>
       )}
       {isRevealed && selected && !isCorrect && (
-        <span style={{ fontSize: '1.2rem' }}>✗</span>
+        <span style={{ fontSize: '1.2rem' }}>❌</span>
       )}
     </button>
   );
 }
+

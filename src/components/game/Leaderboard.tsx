@@ -1,8 +1,9 @@
 // ============================================================
-// Leaderboard — Shows ranked list of players
+// Leaderboard — Shows ranked list of players with score ticker
 // ============================================================
 'use client';
 
+import { useState, useEffect, useRef } from 'react';
 import { PlayerWithId } from '@/types/game';
 import { getRankEmoji, formatScore, truncateName } from '@/utils/formatters';
 
@@ -12,6 +13,65 @@ interface LeaderboardProps {
   title?: string;
   showAnimation?: boolean;
   currentPlayerId?: string;
+}
+
+// Hook for animated score count-up
+function useScoreTicker(targetScore: number, animate: boolean) {
+  const [displayScore, setDisplayScore] = useState(targetScore);
+  const [isBumping, setIsBumping] = useState(false);
+  const prevScoreRef = useRef(targetScore);
+
+  useEffect(() => {
+    if (!animate || prevScoreRef.current === targetScore) {
+      setDisplayScore(targetScore);
+      prevScoreRef.current = targetScore;
+      return;
+    }
+
+    const startVal = prevScoreRef.current;
+    const diff = targetScore - startVal;
+    if (diff === 0) return;
+
+    setIsBumping(true);
+    const duration = 800;
+    const startTime = Date.now();
+
+    const tick = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplayScore(Math.round(startVal + diff * eased));
+
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        setIsBumping(false);
+        prevScoreRef.current = targetScore;
+      }
+    };
+
+    requestAnimationFrame(tick);
+  }, [targetScore, animate]);
+
+  return { displayScore, isBumping };
+}
+
+function ScoreDisplay({ score, animate, rank }: { score: number; animate: boolean; rank: number }) {
+  const { displayScore, isBumping } = useScoreTicker(score, animate);
+
+  return (
+    <span
+      className={`score-ticker ${isBumping ? 'score-ticker-bump' : ''}`}
+      style={{
+        fontFamily: 'var(--font-heading)',
+        fontWeight: 700,
+        fontSize: rank <= 3 ? '1.1rem' : '0.95rem',
+        color: rank === 1 ? 'var(--gold-dark)' : 'var(--ink)',
+      }}
+    >
+      {formatScore(displayScore)}
+    </span>
+  );
 }
 
 export default function Leaderboard({
@@ -96,20 +156,12 @@ export default function Leaderboard({
                 )}
               </span>
 
-              {/* Score */}
-              <span
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 700,
-                  fontSize: rank <= 3 ? '1.1rem' : '0.95rem',
-                  color:
-                    rank === 1
-                      ? 'var(--gold-dark)'
-                      : 'var(--ink)',
-                }}
-              >
-                {formatScore(player.score)}
-              </span>
+              {/* Score with ticker animation */}
+              <ScoreDisplay
+                score={player.score}
+                animate={showAnimation}
+                rank={rank}
+              />
 
               {/* Online status */}
               <span

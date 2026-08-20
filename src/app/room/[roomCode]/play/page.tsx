@@ -1,5 +1,6 @@
 // ============================================================
 // Player Game View — The main game experience for players
+// Enhanced with celebrations, streaks, and micro-interactions
 // ============================================================
 'use client';
 
@@ -14,17 +15,19 @@ import { setupPresence } from '@/services/presenceService';
 import { auth } from '@/lib/firebase';
 import questions from '@/data/questions';
 import { SCORING } from '@/types/game';
+import confetti from 'canvas-confetti';
 import GameHeader from '@/components/layout/GameHeader';
 import QuestionCard from '@/components/game/QuestionCard';
 import DidYouKnow from '@/components/game/DidYouKnow';
 import Leaderboard from '@/components/game/Leaderboard';
 import VictoryScreen from '@/components/game/VictoryScreen';
+import CelebrationOverlay from '@/components/game/CelebrationOverlay';
+import ScorePopup from '@/components/game/ScorePopup';
 import Timer from '@/components/ui/Timer';
 import ProgressBar from '@/components/ui/ProgressBar';
 import SoundToggle from '@/components/ui/SoundToggle';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { showToast } from '@/components/ui/Toast';
-import { getScoreLabel } from '@/utils/scoring';
 
 export default function PlayerGamePage() {
   const params = useParams();
@@ -38,6 +41,11 @@ export default function PlayerGamePage() {
   const [selectedAnswer, setSelectedAnswer] = useState(-1);
   const [lastScore, setLastScore] = useState<number | null>(null);
   const [lastCorrect, setLastCorrect] = useState<boolean | null>(null);
+
+  // Streak tracking (#2)
+  const [streak, setStreak] = useState(0);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const celebrationKeyRef = useRef(0);
 
   const currentUserId = auth?.currentUser?.uid;
   const prevQuestionRef = useRef<number>(-1);
@@ -70,6 +78,7 @@ export default function PlayerGamePage() {
       setSelectedAnswer(-1);
       setLastScore(null);
       setLastCorrect(null);
+      setShowCelebration(false);
       prevQuestionRef.current = room.currentQuestion;
 
       // Reset answer in Firebase
@@ -79,19 +88,62 @@ export default function PlayerGamePage() {
     }
   }, [room?.currentQuestion, roomCode, currentUserId, room]);
 
-  // Play correct/wrong sound on answer reveal
+  // (#1) Mini confetti + celebration on correct answer reveal
   useEffect(() => {
     if (room?.status === 'showing_answer' && lastCorrect !== null) {
-      play(lastCorrect ? 'correct' : 'wrong');
-    }
-  }, [room?.status, lastCorrect, play]);
+      if (lastCorrect) {
+        // Fire mini confetti burst
+        const colors = ['#C4972F', '#FFD700', '#E8D5A3', '#1B5E20'];
 
-  // Play victory sound
-  useEffect(() => {
-    if (room?.status === 'finished') {
-      play('victory');
+        // Center burst
+        confetti({
+          particleCount: streak >= 3 ? 60 : 30,
+          spread: streak >= 3 ? 80 : 50,
+          origin: { x: 0.5, y: 0.5 },
+          colors,
+          gravity: 1.2,
+          scalar: 0.9,
+          ticks: 80,
+        });
+
+        // Side bursts for streaks
+        if (streak >= 3) {
+          setTimeout(() => {
+            confetti({
+              particleCount: 20,
+              angle: 60,
+              spread: 40,
+              origin: { x: 0, y: 0.6 },
+              colors,
+            });
+            confetti({
+              particleCount: 20,
+              angle: 120,
+              spread: 40,
+              origin: { x: 1, y: 0.6 },
+              colors,
+            });
+          }, 200);
+        }
+
+        // Show celebration overlay
+        celebrationKeyRef.current += 1;
+        setShowCelebration(true);
+
+        // Play enhanced sounds based on performance
+        if (streak >= 3) {
+          play('streak');
+        } else if (lastScore !== null && lastScore >= 140) {
+          play('perfect');
+        } else {
+          play('correct');
+        }
+      } else {
+        play('wrong');
+      }
     }
-  }, [room?.status, play]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [room?.status]);
 
   const handleAnswer = useCallback(
     async (answerIndex: number) => {
@@ -110,6 +162,13 @@ export default function PlayerGamePage() {
         );
         setLastScore(result.scoreAwarded);
         setLastCorrect(result.isCorrect);
+
+        // Update streak (#2)
+        if (result.isCorrect) {
+          setStreak((prev) => prev + 1);
+        } else {
+          setStreak(0);
+        }
       } catch (err) {
         const error = err as Error;
         if (error.message === 'ALREADY_ANSWERED') {
@@ -193,12 +252,44 @@ export default function PlayerGamePage() {
     return <LoadingSpinner text="Đang tải câu hỏi..." />;
   }
 
+  // Streak badge helper
+  const getStreakBadge = () => {
+    if (streak < 2) return null;
+    let badgeClass = 'streak-badge streak-badge-normal';
+    let emoji = '🔥';
+    if (streak >= 5) {
+      badgeClass = 'streak-badge streak-badge-legendary';
+      emoji = '💎';
+    } else if (streak >= 3) {
+      badgeClass = 'streak-badge streak-badge-fire';
+      emoji = '🔥';
+    }
+    return (
+      <div style={{ textAlign: 'center' }}>
+        <span className={badgeClass} key={streak}>
+          {emoji} Chuỗi {streak} câu đúng!
+        </span>
+      </div>
+    );
+  };
+
   return (
     <div className="container-game" style={{ paddingTop: 8, paddingBottom: 24 }}>
       <SoundToggle soundEnabled={soundEnabled} onToggle={toggleSound} />
 
+      {/* Celebration Overlay (#1) */}
+      <CelebrationOverlay
+        key={celebrationKeyRef.current}
+        score={lastScore || 0}
+        streak={streak}
+        visible={showCelebration}
+      />
+
       {/* Header */}
       <GameHeader roomCode={roomCode} />
+
+      {/* Streak Badge (#2) */}
+      {streak >= 2 && room.status === 'playing' && getStreakBadge()}
 
       {/* Progress */}
       <div style={{ marginTop: 12, marginBottom: 16 }}>
@@ -239,30 +330,16 @@ export default function PlayerGamePage() {
       {/* SHOWING ANSWER — Reveal correct answer */}
       {room.status === 'showing_answer' && (
         <div className="fade-in">
-          {/* Score feedback */}
+          {/* Streak Badge during answer reveal */}
+          {streak >= 2 && getStreakBadge()}
+
+          {/* Score feedback — Animated popup (#3) */}
           {lastScore !== null && lastCorrect !== null && (
-            <div
-              className="card-gold scale-in"
-              style={{
-                textAlign: 'center',
-                marginBottom: 16,
-                padding: '16px 20px',
-              }}
-            >
-              <p
-                style={{
-                  fontSize: '1.5rem',
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 700,
-                  color: lastCorrect ? 'var(--jade)' : 'var(--crimson)',
-                }}
-              >
-                {lastCorrect ? `+${lastScore}` : '+0'}
-              </p>
-              <p style={{ fontSize: '0.9rem', color: 'var(--ink-light)' }}>
-                {getScoreLabel(lastScore)}
-              </p>
-            </div>
+            <ScorePopup
+              score={lastScore}
+              isCorrect={lastCorrect}
+              visible={true}
+            />
           )}
 
           <QuestionCard
