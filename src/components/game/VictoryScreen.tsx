@@ -133,9 +133,10 @@ export default function VictoryScreen({
               <p
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontSize: '1.05rem',
-                  fontWeight: 800,
-                  color: 'var(--gold-dark)',
+                  fontSize: '1.15rem',
+                  fontWeight: 900,
+                  color: '#991B1B',
+                  textShadow: '0 1px 2px rgba(255, 255, 255, 0.9)',
                 }}
               >
                 {formatScore(player.score)}

@@ -898,11 +898,15 @@ textarea {
 .victory-score {
   font-family: var(--font-heading);
   font-size: 3rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 50%, var(--gold-dark) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-weight: 900;
+  color: #991B1B;
+  display: inline-block;
+  padding: 4px 24px;
+  background: linear-gradient(135deg, #FFFDF5 0%, #F5E8C7 100%);
+  border: 2px solid var(--gold);
+  border-radius: 999px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 0 15px rgba(196, 151, 47, 0.4);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
 }
 
 .victory-medal {

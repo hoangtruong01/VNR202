@@ -147,7 +147,7 @@ export default function PlayerGamePage() {
 
   const handleAnswer = useCallback(
     async (answerIndex: number) => {
-      if (hasAnswered || !currentUserId || !room) return;
+      if (!currentUserId || !room || room.status !== 'playing') return;
 
       setHasAnswered(true);
       setSelectedAnswer(answerIndex);
@@ -163,22 +163,17 @@ export default function PlayerGamePage() {
         setLastScore(result.scoreAwarded);
         setLastCorrect(result.isCorrect);
 
-        // Update streak (#2)
+        // Update streak
         if (result.isCorrect) {
           setStreak((prev) => prev + 1);
         } else {
           setStreak(0);
         }
       } catch (err) {
-        const error = err as Error;
-        if (error.message === 'ALREADY_ANSWERED') {
-          showToast('Bạn đã trả lời câu này rồi', 'info');
-        } else {
-          showToast('Lỗi khi gửi câu trả lời', 'error');
-        }
+        showToast('Lỗi khi gửi câu trả lời', 'error');
       }
     },
-    [hasAnswered, currentUserId, room, roomCode, play]
+    [currentUserId, room, roomCode, play]
   );
 
   const handlePlayAgain = () => {

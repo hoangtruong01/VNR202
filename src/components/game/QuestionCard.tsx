@@ -35,11 +35,11 @@ export default function QuestionCard({
 
   const handleClick = useCallback(
     (index: number) => {
-      if (hasAnswered || isRevealed) return;
+      if (isRevealed) return;
       setLocalSelected(index);
       onAnswer(index);
     },
-    [hasAnswered, isRevealed, onAnswer]
+    [isRevealed, onAnswer]
   );
 
   return (
@@ -93,7 +93,7 @@ export default function QuestionCard({
               isRevealed ? index === question.correctAnswer : null
             }
             isRevealed={isRevealed}
-            disabled={hasAnswered || isRevealed}
+            disabled={isRevealed}
             onClick={() => handleClick(index)}
           />
         ))}
@@ -111,12 +111,12 @@ export default function QuestionCard({
             border: '1.5px solid var(--gold)',
             borderRadius: 'var(--radius-md)',
             fontWeight: 700,
-            fontSize: '0.95rem',
+            fontSize: '0.9rem',
             color: 'var(--ink)',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
           }}
         >
-          ✓ Đã ghi nhận câu trả lời! Đang chờ hết giờ...
+          ✓ Đã ghi nhận đáp án! (Có thể bấm chọn lại trước khi hết giờ)
         </div>
       )}
     </div>

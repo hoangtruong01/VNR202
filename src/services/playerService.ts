@@ -25,42 +25,40 @@ export async function submitAnswer(
   const questionStartedAt = roomData.questionStartedAt;
   const now = Date.now();
 
-  // Check if already answered
-  const answerSnap = await get(
-    ref(db, `rooms/${roomCode}/answers/${playerId}/${questionIndex}`)
-  );
-  if (answerSnap.exists()) {
-    throw new Error('ALREADY_ANSWERED');
-  }
-
-  // Calculate score
   const question = questions[questionIndex];
   const isCorrect = answerIndex === question.correctAnswer;
-  const scoreAwarded = calculateScore(isCorrect, now, questionStartedAt);
+  const newScoreAwarded = calculateScore(isCorrect, now, questionStartedAt);
 
-  // Write answer record (write-once)
-  await set(
-    ref(db, `rooms/${roomCode}/answers/${playerId}/${questionIndex}`),
-    {
-      answer: answerIndex,
-      answeredAt: serverTimestamp(),
-      scoreAwarded,
-    }
-  );
+  // Check if answer already exists (allow re-selecting/changing answer before time's up)
+  const answerRef = ref(db, `rooms/${roomCode}/answers/${playerId}/${questionIndex}`);
+  const answerSnap = await get(answerRef);
 
-  // Update player's score and current answer status
+  let prevScoreAwarded = 0;
+  if (answerSnap.exists()) {
+    prevScoreAwarded = answerSnap.val().scoreAwarded || 0;
+  }
+
+  // Write/overwrite answer record
+  await set(answerRef, {
+    answer: answerIndex,
+    answeredAt: serverTimestamp(),
+    scoreAwarded: newScoreAwarded,
+  });
+
+  // Update player's total score and current answer status
   const playerRef = ref(db, `rooms/${roomCode}/players/${playerId}`);
   const playerSnap = await get(playerRef);
   if (playerSnap.exists()) {
     const currentScore = playerSnap.val().score || 0;
+    const updatedScore = Math.max(0, currentScore - prevScoreAwarded + newScoreAwarded);
     await update(playerRef, {
-      score: currentScore + scoreAwarded,
+      score: updatedScore,
       currentAnswer: answerIndex,
       answeredAt: serverTimestamp(),
     });
   }
 
-  return { scoreAwarded, isCorrect };
+  return { scoreAwarded: newScoreAwarded, isCorrect };
 }
 
 /**
