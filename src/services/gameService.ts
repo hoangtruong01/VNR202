@@ -52,6 +52,20 @@ export async function setGameStatus(
 }
 
 /**
+ * Fast-forward the question timer to remaining seconds (e.g. 3s) — Host only.
+ * Called when all players have submitted their answers.
+ */
+export async function fastForwardTimer(
+  roomCode: string,
+  targetRemainingSeconds: number = 3
+): Promise<void> {
+  const targetStartedAt = Date.now() - (SCORING.TIME_LIMIT - targetRemainingSeconds) * 1000;
+  await update(ref(db, `rooms/${roomCode}`), {
+    questionStartedAt: targetStartedAt,
+  });
+}
+
+/**
  * Show the correct answer — Host only.
  * Triggered when timer ends or all players have answered.
  */

@@ -11,6 +11,7 @@ import { usePlayers } from '@/hooks/usePlayers';
 import { useTimer } from '@/hooks/useTimer';
 import { useSound } from '@/hooks/useSound';
 import { submitAnswer, resetPlayerAnswer } from '@/services/playerService';
+import { fastForwardTimer } from '@/services/gameService';
 import { setupPresence } from '@/services/presenceService';
 import { auth } from '@/lib/firebase';
 import questions from '@/data/questions';
@@ -18,6 +19,7 @@ import { SCORING } from '@/types/game';
 import confetti from 'canvas-confetti';
 import GameHeader from '@/components/layout/GameHeader';
 import QuestionCard from '@/components/game/QuestionCard';
+import AnswerProgressCard from '@/components/game/AnswerProgressCard';
 import DidYouKnow from '@/components/game/DidYouKnow';
 import Leaderboard from '@/components/game/Leaderboard';
 import VictoryScreen from '@/components/game/VictoryScreen';
@@ -42,6 +44,13 @@ export default function PlayerGamePage() {
   const [lastScore, setLastScore] = useState<number | null>(null);
   const [lastCorrect, setLastCorrect] = useState<boolean | null>(null);
 
+  // Answer progress tracking
+  const totalPlayers = players.length;
+  const answeredCount = players.filter(
+    (p) => p.currentAnswer !== undefined && p.currentAnswer !== -1
+  ).length;
+  const isAllAnswered = totalPlayers > 0 && answeredCount >= totalPlayers;
+
   // Streak tracking (#2)
   const [streak, setStreak] = useState(0);
   const [showCelebration, setShowCelebration] = useState(false);
@@ -55,6 +64,19 @@ export default function PlayerGamePage() {
     room?.questionStartedAt || null,
     room?.status === 'playing'
   );
+
+  // Auto fast-forward timer to 3s if host & everyone has answered
+  useEffect(() => {
+    if (
+      room?.status === 'playing' &&
+      isAllAnswered &&
+      timeLeft > 3 &&
+      currentUserId &&
+      room.hostId === currentUserId
+    ) {
+      fastForwardTimer(roomCode, 3).catch(() => {});
+    }
+  }, [room?.status, isAllAnswered, timeLeft, currentUserId, room?.hostId, roomCode]);
 
   // Play tick sound in last 5 seconds
   useEffect(() => {
@@ -311,15 +333,22 @@ export default function PlayerGamePage() {
 
       {/* PLAYING — Show question */}
       {room.status === 'playing' && (
-        <QuestionCard
-          question={currentQuestion}
-          questionIndex={room.currentQuestion}
-          totalQuestions={SCORING.TOTAL_QUESTIONS}
-          isRevealed={false}
-          onAnswer={handleAnswer}
-          hasAnswered={hasAnswered}
-          selectedAnswer={selectedAnswer}
-        />
+        <>
+          <QuestionCard
+            question={currentQuestion}
+            questionIndex={room.currentQuestion}
+            totalQuestions={SCORING.TOTAL_QUESTIONS}
+            isRevealed={false}
+            onAnswer={handleAnswer}
+            hasAnswered={hasAnswered}
+            selectedAnswer={selectedAnswer}
+          />
+          <AnswerProgressCard
+            answeredCount={answeredCount}
+            totalPlayers={totalPlayers}
+            isAllAnswered={isAllAnswered}
+          />
+        </>
       )}
 
       {/* SHOWING ANSWER — Reveal correct answer */}

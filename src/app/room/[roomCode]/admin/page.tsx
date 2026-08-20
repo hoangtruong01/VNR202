@@ -19,6 +19,7 @@ import {
   resumeGame,
   endGame,
   restartGame,
+  fastForwardTimer,
 } from '@/services/gameService';
 import { auth } from '@/lib/firebase';
 import questions from '@/data/questions';
@@ -26,6 +27,7 @@ import { SCORING, GameStatus } from '@/types/game';
 import GameHeader from '@/components/layout/GameHeader';
 import Leaderboard from '@/components/game/Leaderboard';
 import VictoryScreen from '@/components/game/VictoryScreen';
+import AnswerProgressCard from '@/components/game/AnswerProgressCard';
 import Timer from '@/components/ui/Timer';
 import ProgressBar from '@/components/ui/ProgressBar';
 import SoundToggle from '@/components/ui/SoundToggle';
@@ -48,6 +50,11 @@ export default function AdminDashboardPage() {
   const currentUserId = auth?.currentUser?.uid;
   const isHost = room?.hostId === currentUserId;
 
+  const answeredCount = players.filter(
+    (p) => p.currentAnswer !== undefined && p.currentAnswer !== -1
+  ).length;
+  const isAllAnswered = playerCount > 0 && answeredCount >= playerCount;
+
   // Timer for current question
   const { timeLeft, progress, isUrgent } = useTimer(
     room?.questionStartedAt || null,
@@ -59,6 +66,18 @@ export default function AdminDashboardPage() {
       }
     }
   );
+
+  // Auto fast-forward timer to 3s if everyone answered
+  useEffect(() => {
+    if (
+      room?.status === 'playing' &&
+      isAllAnswered &&
+      timeLeft > 3 &&
+      isHost
+    ) {
+      fastForwardTimer(roomCode, 3).catch(() => {});
+    }
+  }, [room?.status, isAllAnswered, timeLeft, isHost, roomCode]);
 
   // Auto-advance: answer → leaderboard → next question
   useEffect(() => {
@@ -294,28 +313,13 @@ export default function AdminDashboardPage() {
             </div>
           </div>
 
-          {/* Answered count */}
+          {/* Answer Progress Card */}
           {room.status === 'playing' && (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                padding: '8px 12px',
-                background: 'rgba(196, 151, 47, 0.08)',
-                borderRadius: 'var(--radius-sm)',
-                marginTop: 8,
-              }}
-            >
-              <span style={{ fontSize: '0.85rem' }}>
-                ✅ {answeredCount}/{playerCount} đã trả lời
-              </span>
-              {answeredCount === playerCount && playerCount > 0 && (
-                <span className="badge badge-gold" style={{ marginLeft: 'auto' }}>
-                  Tất cả đã trả lời!
-                </span>
-              )}
-            </div>
+            <AnswerProgressCard
+              answeredCount={answeredCount}
+              totalPlayers={playerCount}
+              isAllAnswered={isAllAnswered}
+            />
           )}
 
           {/* Show correct answer during answer reveal */}
