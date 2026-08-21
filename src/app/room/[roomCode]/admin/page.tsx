@@ -219,9 +219,6 @@ export default function AdminDashboardPage() {
     finished: '🏁 KẾT THÚC',
   };
 
-  // Count answered players
-  const answeredCount = players.filter((p) => p.currentAnswer !== -1).length;
-
   return (
     <div className="container-admin fade-in" style={{ paddingTop: 12, paddingBottom: 32 }}>
       <SoundToggle soundEnabled={soundEnabled} onToggle={toggleSound} />
