@@ -55,6 +55,9 @@ export default function AnswerOption({
     >
       <span className="answer-label">{LABELS[index]}</span>
       <span style={{ flex: 1, lineHeight: 1.4 }}>{text}</span>
+      {selected && !isRevealed && (
+        <span style={{ fontSize: '1.1rem', color: 'var(--gold-dark)', fontWeight: 800, animation: 'scaleIn 0.3s ease both' }}>✓</span>
+      )}
       {isRevealed && isCorrect && (
         <span style={{ fontSize: '1.2rem', animation: 'celebration-pop 0.4s ease both', animationDelay: '0.3s' }}>✅</span>
       )}

@@ -2,14 +2,34 @@
 // Game Service — Host-only game flow control
 // ============================================================
 import { db } from '@/lib/firebase';
-import { ref, update, serverTimestamp } from 'firebase/database';
+import { ref, update, get, serverTimestamp } from 'firebase/database';
 import { GameStatus, SCORING } from '@/types/game';
+
+/**
+ * Reset all player answers (currentAnswer → -1) for a room.
+ * Called before each new question to prevent stale answer data.
+ */
+async function resetAllPlayerAnswers(roomCode: string): Promise<void> {
+  const playersSnap = await get(ref(db, `rooms/${roomCode}/players`));
+  if (!playersSnap.exists()) return;
+
+  const updates: Record<string, unknown> = {};
+  Object.keys(playersSnap.val()).forEach((playerId) => {
+    updates[`rooms/${roomCode}/players/${playerId}/currentAnswer`] = -1;
+    updates[`rooms/${roomCode}/players/${playerId}/answeredAt`] = null;
+  });
+
+  await update(ref(db), updates);
+}
 
 /**
  * Start the game — Host only.
  * Sets status to 'playing' and starts question 0.
  */
 export async function startGame(roomCode: string): Promise<void> {
+  // Reset all player answers before starting
+  await resetAllPlayerAnswers(roomCode);
+
   await update(ref(db, `rooms/${roomCode}`), {
     status: 'playing' as GameStatus,
     currentQuestion: 0,
@@ -33,6 +53,9 @@ export async function nextQuestion(
       status: 'finished' as GameStatus,
     });
   } else {
+    // Reset all player answers BEFORE advancing to next question
+    await resetAllPlayerAnswers(roomCode);
+
     await update(ref(db, `rooms/${roomCode}`), {
       status: 'playing' as GameStatus,
       currentQuestion: nextQ,

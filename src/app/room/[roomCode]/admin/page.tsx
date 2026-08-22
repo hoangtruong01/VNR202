@@ -68,11 +68,14 @@ export default function AdminDashboardPage() {
   );
 
   // Auto fast-forward timer to 3s if everyone answered
+  // Guard: only after at least 2s have elapsed (prevents race condition
+  // where stale answers from the previous question falsely trigger fast-forward)
   useEffect(() => {
     if (
       room?.status === 'playing' &&
       isAllAnswered &&
       timeLeft > 3 &&
+      timeLeft <= SCORING.TIME_LIMIT - 2 &&
       isHost
     ) {
       fastForwardTimer(roomCode, 3).catch(() => {});

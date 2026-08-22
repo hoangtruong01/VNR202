@@ -363,10 +363,26 @@ body::after {
 }
 
 .answer-option.answer-selected {
-  border-color: var(--gold-dark);
-  background: linear-gradient(135deg, #FDF4D4 0%, #FFFDF7 100%);
-  box-shadow: 0 0 20px rgba(196, 151, 47, 0.5), 0 4px 12px rgba(18, 9, 5, 0.25);
+  border-color: var(--gold);
+  border-width: 3px;
+  background: linear-gradient(135deg, #FFF3C4 0%, #FFF9E6 50%, #FFFDF7 100%);
+  box-shadow: 0 0 0 3px rgba(196, 151, 47, 0.25), 0 0 24px rgba(196, 151, 47, 0.5), 0 6px 16px rgba(18, 9, 5, 0.3);
   font-weight: 700;
+  transform: scale(1.02);
+  animation: answer-selected-pulse 1.8s ease-in-out infinite;
+}
+
+.answer-selected .answer-label {
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+  color: #FFFFFF;
+  box-shadow: 0 0 12px rgba(196, 151, 47, 0.6), 0 2px 6px rgba(0, 0, 0, 0.3);
+  transform: scale(1.1);
+  transition: all 0.3s ease;
+}
+
+@keyframes answer-selected-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(196, 151, 47, 0.25), 0 0 24px rgba(196, 151, 47, 0.5), 0 6px 16px rgba(18, 9, 5, 0.3); }
+  50% { box-shadow: 0 0 0 5px rgba(196, 151, 47, 0.35), 0 0 32px rgba(196, 151, 47, 0.65), 0 8px 20px rgba(18, 9, 5, 0.35); }
 }
 
 .answer-option.answer-correct {

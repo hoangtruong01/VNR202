@@ -66,11 +66,14 @@ export default function PlayerGamePage() {
   );
 
   // Auto fast-forward timer to 3s if host & everyone has answered
+  // Guard: only after at least 2s have elapsed (prevents race condition
+  // where stale answers from the previous question falsely trigger fast-forward)
   useEffect(() => {
     if (
       room?.status === 'playing' &&
       isAllAnswered &&
       timeLeft > 3 &&
+      timeLeft <= SCORING.TIME_LIMIT - 2 &&
       currentUserId &&
       room.hostId === currentUserId
     ) {
